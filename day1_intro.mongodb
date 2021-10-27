@@ -1,0 +1,48 @@
+//================TEMEL KOMUTLAR================
+
+
+//! 1) varolan veritabanlarını listeler
+show dbs;
+
+//! 2) Veritabanı oluşturmak yada varolanı içine girmek için
+use("KISILER");
+
+//! 3) içinde bulunduğum, aktif kullandığım database i görmek için
+use("KISILER");
+db;
+
+//! 4) aktif olan veritabanını silme
+use("KISILER");
+db.dropDatabase();
+
+//! 5) 
+use("KISILER");
+db.createCollection("ogrenciler");
+
+//! 6) collectiona (table) tekli veri ekleme
+use("KISILER");
+db.ogrenciler.insertOne({"ad":"Murat","lakab":"Murti","Maas":4000});
+
+//! 7) tüm verileri listelemek için(select gibi)
+use("KISILER");
+db.ogrenciler.find();
+
+//! 8)collection(table)silmek için
+use("KISILER");
+db.ogrenciler.drop();
+
+//! 9) Çoklu veri ekleme için
+use("KISILER");
+db.ogrenciler.insertMany([
+ {"ad": "Ahmet", "soyad": "Can", "yas": 21},
+ {"ad": "Ali", "soyad": "Can", "yas": 51},
+ {"ad": "Veli", "soyad": "Gel", "yas": 22}]);
+
+
+ //! 10)tarih eklemek için 
+use("KISILER");
+db.ogrenciler.insertOne({"su_anki_tarih": new Date()});
+
+//Uluslararası Standardizasyon Örgütü (ISO=The International Organization for Standardization ) tarih formatı, belirsizliği ortadan kaldıran sayısal bir takvim tarihini ifade etmenin standart bir yoludur . Örneğin, Kuzey Amerikalılar genellikle tarihten önceki ayı yazarlar. Avrupalılar aydan önceki tarihi 30 Mart 1998 için “30.3. 1998” olarak yazarlar.
+use("KISILER");
+db.ogrenciler.insertOne({ad:"Oli", soyad:"Cin","tarih":new ISODate().getYear()});
