@@ -120,4 +120,43 @@ db.ogrenciler.aggregate([{$match:{dersler:["fizik","mat"]}},{$group:{_id:"$sube"
 
 //10)fizik VEYA mat  alanlar
 use("KISILER")
-db.ogrenciler.aggregate([{$match:{dersler:{$in:["fizik,"mat"]}}},{$group:{_id:"$sube", fizikMatAlanlarınSayisi:{$sum:1}}}])
+db.ogrenciler.aggregate([{$match:{dersler:{$in:["fizik","mat"]}}},{$group:{_id:"$sube",fizikveMatAlanlarinSayisi:{$sum:1}}}])
+
+//11) A subesindeki ogrencileri yaşa gore azalan sırada,ota gore yukselen sırada sıralayalım
+use("KISILER")
+db.ogrenciler.aggregate([{$match:{sube:"A"}},{$sort:{yas:-1,not:1}}]);
+
+
+//ikinci yol
+
+use("KISILER")
+db.ogrenciler.aggregate({$match:{sube:"A"}}).sort({yas:-1,not:1})
+
+
+//// 12) MEDYA veritabanı altında hesaplar ismiyle yeni bir collection olusturunuz
+//       ve degerleri girginiz.
+////---------------------------------------------------------------------------------
+use("MEDYA")
+db.hesaplar.insertMany(
+[{"isim" : "ali", "harcamalar":[-80, -40, -50, -120], "kazanc":[100, 150]},
+{"isim" : "Can", "harcamalar" : [-60, -30, -20], "kazanc" : [200, 50, 130] },
+{"isim" : "Canan", "harcamalar" : [-80, -40, -50], "kazanc" : [300, 450] },
+{"isim" : "Betul", "harcamalar" : [-80, -120], "kazanc" : [500, 50, 70, 10] },
+{"isim" : "Ahsen", "harcamalar" : [-140, -50, -120], "kazanc" : [400] },
+{"isim" : "Su", "harcamalar" : [-120], "kazanc" : [22, 375, 65] },
+{"isim" : "Pelin", "harcamalar" : [-180, -40, -70, -12], "kazanc" : [500, 650, 400]}]); 
+
+
+////---------------------------------------------------------------------------------
+//// 13) var olan dokumanlarda her kisi icin toplam harcama, toplam kazanc ve  
+////     bakiye degerlerini hesaplayarak dokumana ekleyen sorguyu yaziniz.
+////     bakiye'ye gore siralayiniz.
+////     NOT: Sorguda olmayan bir field icin $addFields metodu kullanilabilir. project lede yeni field ekleniyor , join classında görücez ama. dizilerde buradaki şekilde olur
+////---------------------------------------------------------------------------------
+use("MEDYA")
+pipeline=[  {$addFields :{toplamHarcama:  {$sum:"$harcamalar"},  toplamKazanc:{ $sum: "$kazanc"}}},
+                  {  $addFields :{ bakiye:  { $add:  ["$toplamHarcama", "$toplamKazanc" ] } }},
+{    $project:{      harcamalar:0, kazanc:0, _id:0}}
+]
+db.hesaplar.aggregate(pipeline)
+
