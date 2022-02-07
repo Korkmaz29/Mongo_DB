@@ -27,7 +27,7 @@ const insertDocuments = function (db, callback) {
     ],
     function (err, docs) {
       if (err) throw err;
-      console.log("Koleksiyona 3 döküman eklenmistir.");
+      console.log("Koleksiyona 3 dökümen eklenmistir.");
       calisincaMongoSonuc = docs;
       callback(docs);
     }
@@ -43,7 +43,7 @@ const findDocuments = function (db, callback) {
     .find({})
     .toArray(function (err, docs) {
       if (err) throw err;
-      console.log("su kayitlar bulunmustur;");
+      console.log("su kayitlar bulunmstur;");
       console.log(docs);
       calisincaMongoSonuc = docs;
       callback(docs);
